@@ -1,0 +1,36 @@
+sudo apt update
+
+# Install Python and pip
+sudo apt install python3-pip -y
+
+# Install necessary Python libraries
+pip3 install adafruit-circuitpython-bmp280 paho-mqtt
+pip install adafruit-circuitpython-bmp280 requests twilio
+
+
+# Install MQTT broker
+sudo apt install mosquitto mosquitto-clients -y
+sudo systemctl enable mosquitto
+sudo systemctl start mosquitto
+
+# Install InfluxDB 2
+wget -qO- https://repos.influxdata.com/influxdata-archive.key | sudo gpg --dearmor -o /usr/share/keyrings/influxdata-archive-keyring.gpg
+echo "deb [signed-by=/usr/share/keyrings/influxdata-archive-keyring.gpg] https://repos.influxdata.com/debian stable main" | sudo tee /etc/apt/sources.list.d/influxdata.list
+sudo apt update
+sudo apt install influxdb2 -y
+sudo systemctl enable influxdb
+sudo systemctl start influxdb
+
+# Install Node-RED
+bash <(curl -sL https://raw.githubusercontent.com/node-red/linux-installers/master/deb/update-nodejs-and-nodered)
+sudo systemctl enable nodered.service
+node-red-start
+
+# Install Grafana
+sudo apt install -y apt-transport-https software-properties-common wget
+wget -q -O - https://packages.grafana.com/gpg.key | sudo gpg --dearmor -o /usr/share/keyrings/grafana.key
+echo "deb [signed-by=/usr/share/keyrings/grafana.key] https://packages.grafana.com/oss/deb stable main" | sudo tee /etc/apt/sources.list.d/grafana.list
+sudo apt update
+sudo apt install grafana -y
+sudo systemctl enable grafana-server
+sudo systemctl start grafana-server
